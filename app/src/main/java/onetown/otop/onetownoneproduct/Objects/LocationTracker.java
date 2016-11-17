@@ -9,10 +9,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 
 public class LocationTracker implements LocationListener {
 
@@ -22,6 +24,7 @@ public class LocationTracker implements LocationListener {
     LocationManager lm;
     Criteria criteria;
     double circleRadius;
+    Location sourceLoc;
 
     private static String TAG="LocationTracker";
 
@@ -33,7 +36,7 @@ public class LocationTracker implements LocationListener {
 
     // Getting users location by criteria
   public Location getUsersLocationByCriteria(GoogleMap map1,double circRadius) {
-            circRadius=circleRadius;
+            circleRadius= circRadius;
 
             Location loc= null;
             boolean isProviderEnabled;
@@ -52,7 +55,7 @@ public class LocationTracker implements LocationListener {
       }else {
           if (isProviderEnabled) {
               if (provider.equals("gps")) {
-                  lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+                  lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
                   if (lm != null) {
                       loc=lm.getLastKnownLocation(provider);
                       if (loc != null) {
@@ -75,7 +78,6 @@ public class LocationTracker implements LocationListener {
 
           }
       }
-
         addCircle(map1,latitude,longitude,circRadius);
         addMarkerTo(map1,latitude,longitude);
 
@@ -84,6 +86,7 @@ public class LocationTracker implements LocationListener {
       Log.d("Criteria",provider);
       Log.d("Location",String.valueOf(loc));
 
+      sourceLoc= loc;
       return loc;
     }
 
@@ -121,14 +124,16 @@ public class LocationTracker implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        Log.i("onProviderEnabled",String.valueOf(lm.isProviderEnabled(provider)));
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Log.i("onProviderDisabled",String.valueOf(!lm.isProviderEnabled(provider)));
     }
 
-
+    public void distanceFromLoctoDestination(Location destinationLoc) {
+        Log.d("Measure Distances : ",String.valueOf(sourceLoc.distanceTo(destinationLoc)));
+    }
 
 }

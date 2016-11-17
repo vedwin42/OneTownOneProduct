@@ -26,14 +26,11 @@
                 android:layout_alignParentStart="true"
                 android:id="@+id/textInputLayout">
 
-                <EditText
-                    android:id="@+id/textInput_places"
+                <AutoCompleteTextView
+                    android:id="@+id/autocompleteTV_search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/editext_hint"
-                    android:maxLines="1"
-                    android:textColor="#ffffff"
-                    android:backgroundTint="#ffffff"/>
+                    android:layout_height="wrap_content" />
+
             </android.support.design.widget.TextInputLayout>
 
             <Button
