@@ -29,7 +29,8 @@
                 <AutoCompleteTextView
                     android:id="@+id/autocompleteTV_search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:completionThreshold="3"/>
 
             </android.support.design.widget.TextInputLayout>
 

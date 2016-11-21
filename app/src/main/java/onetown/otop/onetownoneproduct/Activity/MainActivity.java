@@ -2,8 +2,8 @@ package onetown.otop.onetownoneproduct.Activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -22,21 +21,23 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import onetown.otop.onetownoneproduct.Classes.CustomAutoTextViewAdapter;
+import onetown.otop.onetownoneproduct.Classes.DistanceCalculator;
 import onetown.otop.onetownoneproduct.Database.DBHelper;
-import onetown.otop.onetownoneproduct.Objects.LocationTracker;
+import onetown.otop.onetownoneproduct.Classes.LocationTracker;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 import onetown.otop.onetownoneproduct.R;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator{
     Location loc;
     LatLng latLng;
     LocationTracker tracker;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Marker myCurrentLocationMarker;
     DBHelper dbHelper;
     AutoCompleteTextView autoCompleteTextView;
-    ArrayList<LocationsData> places;
+    ArrayList<LocationsData> places= new ArrayList<LocationsData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +59,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             setContentView(R.layout.activity_main);
             initMap();
         }
-        addLocations();
+
+        places=dbHelper.getAllLocationsAndDatas();
+
         autoCompleteTextView= (AutoCompleteTextView)findViewById(R.id.autocompleteTV_search);
-        ArrayAdapter<LocationsData> locationsDataArrayAdapter= new ArrayAdapter<LocationsData>(this,android.R.layout.simple_list_item_1,places);
-        autoCompleteTextView.setAdapter(locationsDataArrayAdapter);
-        autoCompleteTextView.setThreshold(3);
+        CustomAutoTextViewAdapter adapter= new CustomAutoTextViewAdapter(this,R.layout.activity_main,R.id.autocomplete_result,places);
+        autoCompleteTextView.setAdapter(adapter);
 
         // Get Users location when clicked
         fab= (FloatingActionButton)findViewById(R.id.fab_getLocation);
@@ -79,16 +81,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 myCurrentLocationMarker= gMap.addMarker(new MarkerOptions()
                                                         .position(latLng)
                                                         .title("My Current Location")
-                                                        .snippet("This is a sample snippet"));
+                                                        .snippet("Current location sample snippet"));
                 myCurrentLocationMarker.showInfoWindow();
+                gMap.addCircle(new CircleOptions()
+                                .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
+                                .radius(50000)
+                                .strokeColor(Color.GREEN)
+                                .fillColor(Color.LTGRAY));
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
                 // On marker click listener
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
-                        places= dbHelper.getAllLocationsAndDatas();
-                        Log.d("Arraylist Values",String.valueOf(places.size()));
+                        Log.d("Arraylist Values size",String.valueOf(places.size()));
                         i.putExtra("lists",places);
                         startActivity(i);
                         Log.i("Intent",i.toString());
@@ -96,10 +102,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         return false;
                     }
                 });
+
+            calculateDistanceOfTwoPoint(loc);
             }
         });
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (dbHelper.checkDatabaseIfEmpty()) {
+            addLocations();
+        }else {
+            Toast.makeText(this,"Database already have values",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -139,23 +157,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         gMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
-   /** public void onSearchPlaces(View view) {
-        List<Address> addressList=new ArrayList<Address>();
-        EditText placesInput= (EditText)findViewById(R.id.textInput_places);
-        String location= placesInput.getText().toString();
-        if (location != null || location != "" || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 20);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            for (int i = 0; i < addressList.size(); i++) {
-                LatLng latLng = new LatLng(addressList.get(i).getLatitude(), addressList.get(i).getLongitude());
-                createMarkerInSearch(latLng,addressList,i);
-            }
-        }
-    } */
     // Creation of markers
     public Marker createMarkerInSearch(LatLng latLng,List<Address> addresses,int i) {
         return gMap.addMarker(new MarkerOptions()
@@ -177,4 +178,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 dbHelper.addNewLocation(new LocationsData("Davao Oriental","Coconut-based Products",7.1382151,125.1483339));
     }
 
+    @Override
+    public void calculateDistanceOfTwoPoint(Location source) {
+        Location destinationLoc= new Location("");
+        destinationLoc.setLatitude(7.253501);
+        destinationLoc.setLongitude(125.1708687);
+
+     /**   Marker destMarker= gMap.addMarker(new MarkerOptions()
+                                        .title("Destination")
+                                        .position(new LatLng(destinationLoc.getLatitude(),destinationLoc.getLongitude())));
+        destMarker.showInfoWindow();
+
+        loc.distanceTo(destinationLoc);
+
+        if (loc.distanceTo(destinationLoc) >= 50000) {
+            Toast.makeText(this,"Destination is farther than the radius of 100 meters!",Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this,"Destination is nearer the radius of 100 meters!",Toast.LENGTH_LONG).show();
+        } */
+    }
 }

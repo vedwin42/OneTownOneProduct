@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 
@@ -87,6 +86,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         Log.d("getAllLocations",String.valueOf(locations));
         return locations;
+    }
+
+    public boolean checkDatabaseIfEmpty() {
+        SQLiteDatabase db= getReadableDatabase();
+        String query="SELECT * FROM location";
+        Cursor c= db.rawQuery(query,null);
+
+        if (c.getCount() > 0) {
+            return false;
+        }
+
+        return true;
     }
 
 }
