@@ -5,17 +5,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -37,7 +40,7 @@ import onetown.otop.onetownoneproduct.Objects.LocationsData;
 import onetown.otop.onetownoneproduct.R;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener{
     Location loc;
     LatLng latLng;
     LocationTracker tracker;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     DBHelper dbHelper;
     AutoCompleteTextView autoCompleteTextView;
     ArrayList<LocationsData> places= new ArrayList<LocationsData>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         autoCompleteTextView= (AutoCompleteTextView)findViewById(R.id.autocompleteTV_search);
         CustomAutoTextViewAdapter adapter= new CustomAutoTextViewAdapter(this,R.layout.activity_main,R.id.autocomplete_result,places);
         autoCompleteTextView.setAdapter(adapter);
+
+        // added listener for any clicked listview results
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("D_onItemClick","Clicked on item: "+places.get(position).toString());
+            }
+        });
 
         // Get Users location when clicked
         fab= (FloatingActionButton)findViewById(R.id.fab_getLocation);
@@ -196,5 +208,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }else {
             Toast.makeText(this,"Destination is nearer the radius of 100 meters!",Toast.LENGTH_LONG).show();
         } */
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

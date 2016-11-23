@@ -63,4 +63,10 @@ public class LocationsData implements Serializable{
     public void setLocationLongitude(double locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
+    public String toString() {
+        return "Location: "+locationName+"\n"
+                +"Location Products: "+locationProducts+"\n"
+                +"Location Latitude: "+locationLatitude+"\n"
+                +"Location Longitude: "+locationLongitude;
+    }
 }
