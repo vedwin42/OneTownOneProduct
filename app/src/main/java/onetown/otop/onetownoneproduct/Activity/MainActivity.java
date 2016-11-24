@@ -1,13 +1,20 @@
 package onetown.otop.onetownoneproduct.Activity;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
+import android.location.LocationListener;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +26,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -35,35 +44,37 @@ import java.util.List;
 import onetown.otop.onetownoneproduct.Classes.CustomAutoTextViewAdapter;
 import onetown.otop.onetownoneproduct.Classes.DistanceCalculator;
 import onetown.otop.onetownoneproduct.Database.DBHelper;
-import onetown.otop.onetownoneproduct.Classes.LocationTracker;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 import onetown.otop.onetownoneproduct.R;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener{
-    Location loc;
+
     LatLng latLng;
-    LocationTracker tracker;
+   // LocationTracker tracker;
     FloatingActionButton fab;
     GoogleMap gMap;
-    double radiusValue;
     Marker myCurrentLocationMarker;
     DBHelper dbHelper;
     AutoCompleteTextView autoCompleteTextView;
     ArrayList<LocationsData> places= new ArrayList<LocationsData>();
 
+    Location loc;
+    LocationRequest locationRequest;
+    GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHelper= new DBHelper(this);
-        tracker= new LocationTracker(this,gMap);
+       // tracker= new LocationTracker(this,gMap);
         if (isGooglePlayAvailable()) {
             Toast.makeText(this,"Successfully connected to Google Play Services",Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_main);
+            setupGoogleApiClient();
             initMap();
-        }
 
+        }
         places=dbHelper.getAllLocationsAndDatas();
 
         autoCompleteTextView= (AutoCompleteTextView)findViewById(R.id.autocompleteTV_search);
@@ -84,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-                loc= tracker.getUsersLocationByCriteria(gMap,radiusValue);
+               // loc= tracker.getUsersLocationByCriteria(gMap,radiusValue);
                 latLng= new LatLng(loc.getLatitude(),loc.getLongitude());
                 Log.d("MainActivity",String.valueOf(loc.getLatitude()+" "+String.valueOf(loc.getLongitude())));
 
@@ -92,8 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Zoom Camera to the current location
                 myCurrentLocationMarker= gMap.addMarker(new MarkerOptions()
                                                         .position(latLng)
-                                                        .title("My Current Location")
-                                                        .snippet("Current location sample snippet"));
+                                                        .title("My Current Location"));
                 myCurrentLocationMarker.showInfoWindow();
                 gMap.addCircle(new CircleOptions()
                                 .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
@@ -124,17 +134,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onStart() {
         super.onStart();
-
+        client.connect();
         if (dbHelper.checkDatabaseIfEmpty()) {
             addLocations();
         }else {
             Toast.makeText(this,"Database already have values",Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     // Check if Google Play Services is Available
@@ -151,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this,"Can't connect to Play Services",Toast.LENGTH_LONG).show();
         }
         return false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        client.disconnect();
     }
 
     //Initialize Map
@@ -209,10 +220,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this,"Destination is nearer the radius of 100 meters!",Toast.LENGTH_LONG).show();
         } */
     }
+    private void setupGoogleApiClient() {
+
+        client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    private void requestLocationData() {
+        locationRequest= LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(100);
+        // Permission COdes
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION},1);
+
+            return;
+        }
+
+
+        loc=LocationServices.FusedLocationApi.getLastLocation(client);
+
+        if (loc != null) {
+            Log.i("LOCATION: ",loc.toString());
+        }else {
+            AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                builder.setTitle("Location Service not Active");
+                builder.setMessage("Please enable location service (GPS)");
+                builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+            Dialog dialog=builder.create();
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        Log.i("onConnected","Connected!");
+        requestLocationData();
     }
 
     @Override
@@ -224,4 +278,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+
 }

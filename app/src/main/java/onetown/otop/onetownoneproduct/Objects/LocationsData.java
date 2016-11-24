@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public class LocationsData implements Serializable{
 
-    private int _id;
-    private String locationName;
-    private String locationProducts;
-    private double locationLatitude;
-    private double locationLongitude;
+    public int _id;
+    public String locationName;
+    public String locationProducts;
+    public double locationLatitude;
+    public double locationLongitude;
 
     public LocationsData() {
 

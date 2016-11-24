@@ -58,34 +58,34 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     // Get All Location rows and their details
     public ArrayList<LocationsData> getAllLocationsAndDatas() {
-        SQLiteDatabase db= getReadableDatabase();
-        LocationsData locationsData= new LocationsData();
+        SQLiteDatabase db= getWritableDatabase();
         ArrayList<LocationsData> locations= new ArrayList<LocationsData>();
 
-        String query= "SELECT * FROM location";
+        String query= "SELECT * FROM location;";
         Log.i("Query ",query);
         Cursor c = db.rawQuery(query,null);
 
         if (c.moveToFirst()) {
 
-            do{
+            do {
 
-            locationsData.set_id(c.getInt(c.getColumnIndex(TBL_ID)));
-            locationsData.setLocationName(c.getString(c.getColumnIndex("locationName")));
-            locationsData.setLocationProducts(c.getString(c.getColumnIndex("locationProducts")));
-            locationsData.setLocationLatitude(c.getDouble(c.getColumnIndex("locationLat")));
-            locationsData.setLocationLongitude(c.getDouble(c.getColumnIndex("locationLong")));
+                LocationsData locationsData= new LocationsData();
+                locationsData.set_id(c.getInt(c.getColumnIndex(TBL_ID)));
+                locationsData.setLocationName(c.getString(c.getColumnIndex("locationName")));
+                locationsData.setLocationProducts(c.getString(c.getColumnIndex("locationProducts")));
+                locationsData.setLocationLatitude(c.getDouble(c.getColumnIndex("locationLat")));
+                locationsData.setLocationLongitude(c.getDouble(c.getColumnIndex("locationLong")));
 
-            locations.add(locationsData);
+                locations.add(locationsData);
+            }while (c.moveToNext());
 
-        }
-            while (c.moveToNext());
 
 
     }
-        db.close();
         Log.d("getAllLocations",String.valueOf(locations));
+        Log.i("Cursor values",c.toString());
         return locations;
+
     }
 
     public boolean checkDatabaseIfEmpty() {
