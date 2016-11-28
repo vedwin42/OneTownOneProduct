@@ -3,12 +3,30 @@
 
     <item
         is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/10.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="cf60a8cd2f896314e40b2f1a9788e91e228c3671">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-10.0.0_f99fa3561a0b31a11f7f1a82ec94fd7ea341ae53/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.3"
         sha1="985be85104f6d0c5c5e51e7b7e60d8883a98ac64">
         <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.0_6df070995e98d9e8aff8240ced5bb631f409b365/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="75dbc3537bc912d077b3db2f5ac72d5b43644b2c">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.0_d4fe81c0e111155acbe93807db3cf7fec40d4c94/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -25,7 +43,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.3"
-        sha1="11ee149ab6caec2c1afeeaa14cf55435cef6f293">
+        sha1="eabcad152ad5de2cf1595c0b84e42bb21d3aa5fb">
         <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_95b879f13b5f85330056bf474e6160f5f82fd76a/classes.dex" />
     </item>
     <item
@@ -57,6 +75,42 @@
     </item>
     <item
         is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="813f70b551ce5206ad15dfe6e2f5b2d86e08a723">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-places-10.0.0_447064d74f97ec7cdcfe805aa3cd9fe82a651fcc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.4.0_b99d725752dbd8399d3374a51e03b8f33f82dd0c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="df03b970f4753521dab4e400c47696e21e51e3ac">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_28e8498df18d27c6ab208c9b03faa76a13a03198/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="3347c3e7056fabc88bdbd8fdae65ddf2b674d977">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-10.0.0_39737818a49860f51a82250eb6e7f046a75b6a66/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/10.0.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -81,60 +135,6 @@
         revision="23.0.3"
         sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
         <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.4.0_1db1bd7e19af66616be798b828be57b0febf1ea3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/10.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="cf60a8cd2f896314e40b2f1a9788e91e228c3671">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-10.0.0_f99fa3561a0b31a11f7f1a82ec94fd7ea341ae53/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="75dbc3537bc912d077b3db2f5ac72d5b43644b2c">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.0_d4fe81c0e111155acbe93807db3cf7fec40d4c94/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="813f70b551ce5206ad15dfe6e2f5b2d86e08a723">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-places-10.0.0_447064d74f97ec7cdcfe805aa3cd9fe82a651fcc/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.4.0_b99d725752dbd8399d3374a51e03b8f33f82dd0c/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="89f4cb1610b3e69157cada1d5b4d352b5125d357">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_28e8498df18d27c6ab208c9b03faa76a13a03198/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.3"
-        sha1="3347c3e7056fabc88bdbd8fdae65ddf2b674d977">
-        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-10.0.0_39737818a49860f51a82250eb6e7f046a75b6a66/classes.dex" />
     </item>
 
 </items>

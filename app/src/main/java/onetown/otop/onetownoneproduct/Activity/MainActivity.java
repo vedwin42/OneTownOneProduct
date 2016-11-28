@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
 import android.location.Location;
-import android.location.LocationListener;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,26 +38,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import onetown.otop.onetownoneproduct.Classes.CustomAutoTextViewAdapter;
 import onetown.otop.onetownoneproduct.Classes.DistanceCalculator;
+import onetown.otop.onetownoneproduct.Classes.LocationStaticDatas;
 import onetown.otop.onetownoneproduct.Database.DBHelper;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 import onetown.otop.onetownoneproduct.R;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,DistanceCalculator,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,LocationListener{
 
     LatLng latLng;
-   // LocationTracker tracker;
     FloatingActionButton fab;
-    GoogleMap gMap;
-    Marker myCurrentLocationMarker;
+    GoogleMap gMap,placesMap;
+    Marker myCurrentLocationMarker,placesMarker;
     DBHelper dbHelper;
     AutoCompleteTextView autoCompleteTextView;
     ArrayList<LocationsData> places= new ArrayList<LocationsData>();
-
     Location loc;
     LocationRequest locationRequest;
     GoogleApiClient client;
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHelper= new DBHelper(this);
-       // tracker= new LocationTracker(this,gMap);
         if (isGooglePlayAvailable()) {
             Toast.makeText(this,"Successfully connected to Google Play Services",Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_main);
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
         places=dbHelper.getAllLocationsAndDatas();
-
         autoCompleteTextView= (AutoCompleteTextView)findViewById(R.id.autocompleteTV_search);
         CustomAutoTextViewAdapter adapter= new CustomAutoTextViewAdapter(this,R.layout.activity_main,R.id.autocomplete_result,places);
         autoCompleteTextView.setAdapter(adapter);
@@ -85,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                gMap.clear();
                 Log.d("D_onItemClick","Clicked on item: "+places.get(position).toString());
+                createMarker(places);
             }
         });
 
@@ -95,28 +92,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
+                requestLocationUpdate();
+
                // loc= tracker.getUsersLocationByCriteria(gMap,radiusValue);
                 latLng= new LatLng(loc.getLatitude(),loc.getLongitude());
                 Log.d("MainActivity",String.valueOf(loc.getLatitude()+" "+String.valueOf(loc.getLongitude())));
 
-                gMap.clear();
+              //  gMap.clear();
                 // Zoom Camera to the current location
-                myCurrentLocationMarker= gMap.addMarker(new MarkerOptions()
-                                                        .position(latLng)
-                                                        .title("My Current Location"));
-                myCurrentLocationMarker.showInfoWindow();
                 gMap.addCircle(new CircleOptions()
                                 .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
-                                .radius(50000)
+                                .radius(1000)
                                 .strokeColor(Color.GREEN)
                                 .fillColor(Color.LTGRAY));
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
                 // On marker click listener
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
-                        Log.d("Arraylist Values size",String.valueOf(places.size()));
                         i.putExtra("lists",places);
                         startActivity(i);
                         Log.i("Intent",i.toString());
@@ -124,24 +118,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         return false;
                     }
                 });
-
-            calculateDistanceOfTwoPoint(loc);
             }
         });
-
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         client.connect();
         if (dbHelper.checkDatabaseIfEmpty()) {
-            addLocations();
+          new LocationStaticDatas(dbHelper);
         }else {
             Toast.makeText(this,"Database already have values",Toast.LENGTH_LONG).show();
         }
-    }
 
+        createLocationRequest();
+    }
+    // Marker Creation for OTOP Places
+    public boolean createMarker(ArrayList<LocationsData>datas) {
+        placesMap= gMap;
+        boolean isNotEmpty= true;
+        if (isNotEmpty) {
+           placesMarker= placesMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(datas.get(0).locationLatitude,datas.get(0).locationLongitude))
+                    .title(datas.get(0).locationName));
+           placesMarker.showInfoWindow();
+           placesMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+               @Override
+               public boolean onMarkerClick(Marker marker) {
+                   Log.i("Places Marker",marker.getTitle()+"\n"+places.toString());
+                   return false;
+               }
+           });
+        }else {
+            isNotEmpty=false;
+        }
+        return isNotEmpty;
+    }
     // Check if Google Play Services is Available
     public boolean isGooglePlayAvailable() {
         GoogleApiAvailability api= GoogleApiAvailability.getInstance();
@@ -164,6 +176,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         client.disconnect();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopGettingLocationData();
+    }
+
     //Initialize Map
     public void initMap() {
         GoogleMapOptions opt= new GoogleMapOptions().liteMode(true);
@@ -179,28 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(10.8417947,123.057734),5));
         gMap.getUiSettings().setZoomControlsEnabled(true);
     }
-
-    // Creation of markers
-    public Marker createMarkerInSearch(LatLng latLng,List<Address> addresses,int i) {
-        return gMap.addMarker(new MarkerOptions()
-        .position(latLng)
-        .title(toString(addresses,i)));
-
-    }
-
-    public String toString(List<Address> list,int i) {
-        return String.valueOf(list.get(i).getLocality())+" "+
-                String.valueOf(list.get(i).getAdminArea())+" "+
-                        String.valueOf(list.get(i).getFeatureName());
-    }
-
-    public void addLocations() {
-                dbHelper.addNewLocation(new LocationsData("Davao City","Banana Chips",7.253501,125.1708687));
-                dbHelper.addNewLocation(new LocationsData("Davao Del Sur","Processed Mango",6.4653752,124.2872263));
-                dbHelper.addNewLocation(new LocationsData("Davao Del Norte","Banana Chips",7.4455742,125.036961));
-                dbHelper.addNewLocation(new LocationsData("Davao Oriental","Coconut-based Products",7.1382151,125.1483339));
-    }
-
     @Override
     public void calculateDistanceOfTwoPoint(Location source) {
         Location destinationLoc= new Location("");
@@ -229,49 +225,62 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();
     }
 
-    private void requestLocationData() {
-        locationRequest= LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(100);
+    // Request Location Data
+    private void requestLocationUpdate() {
         // Permission COdes
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION},1);
-
             return;
         }
-
+        LocationServices.FusedLocationApi.requestLocationUpdates(client,locationRequest,this);
+    }
+    // Getting last known Location
+    private void getLastKnownLocation() {
 
         loc=LocationServices.FusedLocationApi.getLastLocation(client);
 
         if (loc != null) {
             Log.i("LOCATION: ",loc.toString());
+
+            myCurrentLocationMarker= gMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(loc.getLatitude(),loc.getLongitude()))
+                    .title("My Current Location"));
         }else {
             AlertDialog.Builder builder= new AlertDialog.Builder(this);
-                builder.setTitle("Location Service not Active");
-                builder.setMessage("Please enable location service (GPS)");
-                builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                });
+            builder.setTitle("Location Service not Active");
+            builder.setMessage("Please enable location service (GPS)");
+            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            });
             Dialog dialog=builder.create();
             dialog.setCancelable(false);
             dialog.show();
         }
-
     }
 
+
+    private void createLocationRequest() {
+        locationRequest= LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(2000);//2 Seconds per update
+    }
+
+    private void stopGettingLocationData() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(client,this);
+    }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("onConnected","Connected!");
-        requestLocationData();
+        getLastKnownLocation();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        client.connect();
     }
 
     @Override
@@ -279,6 +288,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
-
+    @Override
+    public void onLocationChanged(Location location) {
+        gMap.clear();
+        getLastKnownLocation();
+    }
 }
