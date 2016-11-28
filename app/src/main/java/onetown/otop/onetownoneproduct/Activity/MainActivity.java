@@ -83,6 +83,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 gMap.clear();
                 Log.d("D_onItemClick","Clicked on item: "+places.get(position).toString());
                 createMarker(places);
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(places.get(position).locationLatitude,places.get(position).locationLongitude),10));
+                Log.d("Place Position ",String.valueOf("Latitude: "+places.get(position).locationLatitude+" Longitude: "+places.get(position).locationLongitude));
+
+
+         /**      // On marker click listener
+                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
+                        i.putExtra("lists",places);
+                        startActivity(i);
+                        Log.i("Intent",i.toString());
+                        Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
+                        return false;
+                    }
+                }); */
             }
         });
 
@@ -106,20 +122,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .strokeColor(Color.GREEN)
                                 .fillColor(Color.LTGRAY));
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
-                // On marker click listener
-                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
-                        i.putExtra("lists",places);
-                        startActivity(i);
-                        Log.i("Intent",i.toString());
-                        Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
-                        return false;
-                    }
-                });
+
+
             }
         });
+
+
     }
     @Override
     protected void onStart() {
@@ -146,6 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                @Override
                public boolean onMarkerClick(Marker marker) {
                    Log.i("Places Marker",marker.getTitle()+"\n"+places.toString());
+
+                   Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
+                   i.putExtra("lists",places);
+                   startActivity(i);
+                   Log.i("Intent",i.toString());
+                   Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
                    return false;
                }
            });
@@ -290,7 +304,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+        loc= location;
         gMap.clear();
+
         getLastKnownLocation();
     }
 }
