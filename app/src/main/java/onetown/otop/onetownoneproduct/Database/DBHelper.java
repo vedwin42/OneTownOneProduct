@@ -25,18 +25,18 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context,DB_NAME,null,DB_VERSION);
     }
 
-    String sqlquery= "CREATE TABLE location ("+TBL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, locationName TEXT, locationProducts TEXT," +
-            "locationLat DECIMAL, locationLong DECIMAL)";
+    String createLocationTableQuery= "CREATE TABLE location ("+TBL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, locationName TEXT, locationProducts TEXT," +
+            "locationLat DECIMAL, locationLong DECIMAL, drawable_image TEXT)";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(sqlquery);
+        db.execSQL(createLocationTableQuery);
         Log.i("onCreate",String.valueOf(db.getPageSize()));
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXIST location");
     }
 
     public LocationsData addNewLocation(LocationsData data) {
@@ -48,6 +48,8 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("locationProducts",data.getLocationProducts());
         values.put("locationLat",data.getLocationLatitude());
         values.put("locationLong",data.getLocationLongitude());
+        values.put("drawable_image",data.getImage_path());
+
 
         //db.insert("location",null,values);
         db.insertWithOnConflict("location",null,values,SQLiteDatabase.CONFLICT_IGNORE);
@@ -75,6 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 locationsData.setLocationProducts(c.getString(c.getColumnIndex("locationProducts")));
                 locationsData.setLocationLatitude(c.getDouble(c.getColumnIndex("locationLat")));
                 locationsData.setLocationLongitude(c.getDouble(c.getColumnIndex("locationLong")));
+                locationsData.setImage_path(c.getString(c.getColumnIndex("drawable_image")));
 
                 locations.add(locationsData);
             }while (c.moveToNext());

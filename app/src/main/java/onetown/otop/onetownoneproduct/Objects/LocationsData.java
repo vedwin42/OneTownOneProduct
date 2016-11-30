@@ -13,15 +13,17 @@ public class LocationsData implements Serializable{
     public String locationProducts;
     public double locationLatitude;
     public double locationLongitude;
+    public String image_path;
 
     public LocationsData() {
 
     }
-    public LocationsData( String locationName,String locationProducts, double locationLatitude, double locationLongitude) {
+    public LocationsData( String locationName,String locationProducts, double locationLatitude, double locationLongitude,String image_path) {
         this.locationName=locationName;
         this.locationProducts= locationProducts;
         this.locationLatitude=locationLatitude;
         this.locationLongitude=locationLongitude;
+        this.image_path=image_path;
     }
 
     public int get_id() {
@@ -63,6 +65,15 @@ public class LocationsData implements Serializable{
     public void setLocationLongitude(double locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
     public String toString() {
         return "Location: "+locationName+"\n"
                 +"Location Products: "+locationProducts+"\n"
