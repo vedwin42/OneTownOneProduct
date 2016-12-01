@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_place_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="onetown.otop.onetownoneproduct.Activity.PlaceDetailsActivity">
-    
-    <ImageView
-        android:id="@+id/place_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="5dp"/>
+
 
 
     <android.support.v7.widget.CardView
@@ -27,14 +22,83 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/place_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
             <TextView
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:text="Description here."
-                android:padding="20dp"
+                android:padding="5dp"
                 android:id="@+id/textview_placeDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp">
+
+        <CheckBox
+            android:id="@+id/like_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:button="@drawable/like_button_state"/>
+
+    </android.support.v7.widget.CardView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
+
+            <ListView
+                android:id="@+id/comments_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/comment_editext"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="Type your comment here"/>
+            <Button
+                android:id="@+id/button_postComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send"/>
+
+
+        </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 

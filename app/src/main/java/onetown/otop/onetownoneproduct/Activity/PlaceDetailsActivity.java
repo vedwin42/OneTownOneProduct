@@ -30,6 +30,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         tv= (TextView)findViewById(R.id.textview_placeDetails);
         tv.setText(data.get(0).locationProducts);
         iV= (ImageView)findViewById(R.id.place_image);
+        iV.setScaleType(ImageView.ScaleType.CENTER_CROP);
         iV.setImageResource(Integer.parseInt(data.get(0).image_path));
     }
 }

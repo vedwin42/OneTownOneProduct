@@ -61,7 +61,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.3"
-        sha1="84c536928b7f5f7fb795d2d28e4f6cbee553ba44">
+        sha1="b6119ffb1d0f2912068e6707346bbd9da1a480fa">
         <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_95b879f13b5f85330056bf474e6160f5f82fd76a/classes.dex" />
     </item>
     <item
@@ -102,6 +102,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.github.jd-alexander/LikeButton/0.2.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.3"
+        sha1="042cf6b3b9ef0ea3baacd9b27e4901680769cbc8">
+        <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.jd-alexander-LikeButton-0.2.0_e2a0ff3815f58c55de6f16e64c2ca1e5db558427/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -115,7 +124,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.3"
-        sha1="75c7f14332664264d21954a5180c86e62920dcef">
+        sha1="831a7ca0a81fe87ca4c81531c1c591f5b0b45f27">
         <dex dex="/home/opensourceuser/Documents/AndroidStudioProjects/OneTownOneProduct/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_28e8498df18d27c6ab208c9b03faa76a13a03198/classes.dex" />
     </item>
     <item

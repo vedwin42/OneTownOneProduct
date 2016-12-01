@@ -11,10 +11,6 @@ import java.util.ArrayList;
 
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 
-/**
- * Created by root on 11/17/16.
- */
-
 public class DBHelper extends SQLiteOpenHelper {
 
     private static int DB_VERSION=1;
