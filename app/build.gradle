@@ -31,7 +31,6 @@ dependencies {
     //compile 'com.google.android.gms:play-services:9.8.0'
     // Instead use this if your application only needs google maps to use Google Play Services.
     // https://developers.google.com/android/guides/setup
-
     compile 'com.google.android.gms:play-services-maps:9.8.0'
     compile 'com.android.support:design:23.0.0'
     compile 'com.google.android.gms:play-services-places:10.0.0'
@@ -40,6 +39,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
-
     testCompile 'junit:junit:4.12'
 }

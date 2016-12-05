@@ -25,11 +25,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/myOwn">
+
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+             <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -41,7 +42,12 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".Activity.PlaceDetailsActivity" />
-        <activity android:name=".Activity.LoginActivity" />
+
+        <activity android:name=".Activity.LoginActivity" >
+
+
+
+        </activity>
         <activity android:name=".Activity.RegistrationActivity"></activity>
     </application>
 
