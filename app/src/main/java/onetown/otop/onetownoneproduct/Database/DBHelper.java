@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import onetown.otop.onetownoneproduct.Objects.Credentials;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -17,16 +18,32 @@ public class DBHelper extends SQLiteOpenHelper {
     private static String DB_NAME="LocationData";
     private static String TBL_ID="id";
 
+    private String OTOP_TABLE="location";
+    private String COMMENTS_TABLE="tbl_comments";
+    private String USERS_TABLE="tbl_user";
+
     public DBHelper(Context context) {
         super(context,DB_NAME,null,DB_VERSION);
     }
 
-    String createLocationTableQuery= "CREATE TABLE location ("+TBL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, locationName TEXT, locationProducts TEXT," +
+    String createLocationTableQuery= "CREATE TABLE " +OTOP_TABLE+" ("+TBL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "locationName TEXT, locationProducts TEXT," +
             "locationLat DECIMAL, locationLong DECIMAL, drawable_image TEXT)";
+
+    String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+            " comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            " user_fullname TEXT, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id) )";
+
+    String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+            " user_email TEXT NOT NULL, " +
+            "user_password TEXT NOT NULL )";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createLocationTableQuery);
+        db.execSQL(createCommentsTableQuery);
+        db.execSQL(createUserTableQuery);
+
         Log.i("onCreate",String.valueOf(db.getPageSize()));
     }
 
@@ -35,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXIST location");
     }
 
+    // Location Functions------> Start
     public LocationsData addNewLocation(LocationsData data) {
 
         SQLiteDatabase db= getWritableDatabase();
@@ -86,6 +104,39 @@ public class DBHelper extends SQLiteOpenHelper {
         return locations;
 
     }
+    // Location Functions------ END
+
+    // Users Functions------- Start
+    public Credentials addCredentialsToDb(Credentials credentials) {
+        SQLiteDatabase db= getWritableDatabase();
+        ContentValues cv= new ContentValues();
+        cv.put("user_email",credentials.getEmail());
+        cv.put("user_password",credentials.getPassword());
+
+        db.insert(USERS_TABLE,null,cv);
+        Log.d("Users Table Size: ",String.valueOf(db.getPageSize()));
+
+        if (cv.size() < 0) {
+            Log.e("Add Credentials","Empty! No value!");
+        }
+        db.close();
+        return credentials;
+
+    }
+
+    public Boolean checkIfEmailExist(Credentials cred) {
+        boolean userExists=true;
+
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor c=db.query(USERS_TABLE,null,"user_email=?",new String[]{cred.getEmail()},null,null,null);
+        if (c.getCount() < 1) {
+            c.close();
+            userExists=false;
+        }
+
+        return userExists;
+    }
+
 
     public boolean checkDatabaseIfEmpty() {
         SQLiteDatabase db= getReadableDatabase();

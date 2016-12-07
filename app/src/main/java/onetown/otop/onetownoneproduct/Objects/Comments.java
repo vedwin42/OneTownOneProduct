@@ -1,20 +1,25 @@
 package onetown.otop.onetownoneproduct.Objects;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by EasyBreezy on 12/5/2016.
  */
 
 public class Comments {
     public int _id;
-    public String currentUserName;
+    public String currentEmail;
     public String currentTimeStamp;
     public String commentContent;
 
     public Comments() {
 
     }
-    public Comments(String _currentUserName,String _currentTimeStamp, String _commentContent) {
-        this.currentUserName=_currentUserName;
+    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent) {
+        this.currentEmail=_currentEmail;
         this.currentTimeStamp=_currentTimeStamp;
         this.commentContent=_commentContent;
     }
@@ -27,21 +32,20 @@ public class Comments {
         this._id = _id;
     }
 
-    public String getCurrentUserName() {
-        return currentUserName;
+    public String getCurrentEmail() {
+        return currentEmail;
     }
 
-    public void setCurrentUserName(String currentUserName) {
-        this.currentUserName = currentUserName;
+    public void setCurrentEmail(Credentials currentEmail) {
+        this.currentEmail = currentEmail.getEmail();
     }
 
     public String getCurrentTimeStamp() {
-        return currentTimeStamp;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date= new Date();
+        return sdf.format(date);
     }
 
-    public void setCurrentTimeStamp(String currentTimeStamp) {
-        this.currentTimeStamp = currentTimeStamp;
-    }
 
     public String getCommentContent() {
         return commentContent;

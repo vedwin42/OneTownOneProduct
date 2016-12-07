@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         autoCompleteTextView= (AutoCompleteTextView)findViewById(R.id.autocompleteTV_search);
         CustomAutoTextViewAdapter adapter= new CustomAutoTextViewAdapter(this,R.layout.activity_main,R.id.autocomplete_result,places);
         autoCompleteTextView.setAdapter(adapter);
+        adapter.setNotifyOnChange(true);
 
         // added listener for any clicked listview results
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

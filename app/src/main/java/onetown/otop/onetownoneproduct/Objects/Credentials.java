@@ -6,7 +6,6 @@ package onetown.otop.onetownoneproduct.Objects;
 
 public class Credentials {
     public int _id;
-    public String username;
     public String password;
     public String email;
 
@@ -14,8 +13,7 @@ public class Credentials {
 
     }
 
-    public Credentials(String username,String password,String email) {
-        this.username=username;
+    public Credentials(String password,String email) {
         this.password=password;
         this.email= email;
     }
@@ -26,14 +24,6 @@ public class Credentials {
 
     public void set_id(int _id) {
         this._id = _id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
