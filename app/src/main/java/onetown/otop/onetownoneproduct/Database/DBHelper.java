@@ -124,14 +124,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public Boolean checkIfEmailExist(Credentials cred) {
+    public Boolean checkIfEmailExist(String email) {
         boolean userExists=true;
 
         SQLiteDatabase db= getReadableDatabase();
-        Cursor c=db.query(USERS_TABLE,null,"user_email=?",new String[]{cred.getEmail()},null,null,null);
+        Cursor c=db.query(USERS_TABLE,null,"user_email=?",new String[]{email},null,null,null);
         if (c.getCount() < 1) {
             c.close();
             userExists=false;
+            Log.e("User Email Check: ","user existed");
         }
 
         return userExists;

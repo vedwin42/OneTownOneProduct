@@ -55,10 +55,19 @@ public class RegistrationActivity extends AppCompatActivity {
             if (password != confirmPass && password.isEmpty() && confirmPass.isEmpty()) {
                 Toast.makeText(getApplicationContext(),"Please check your password/email !",Toast.LENGTH_LONG).show();
             }else {
-                helper.addCredentialsToDb(cred);
+
+                if (helper.checkIfEmailExist(email)) {
+                    Toast.makeText(getApplicationContext(),"An Existing Email found. Please use other email",Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getApplicationContext(),"Credentials Successfully added",Toast.LENGTH_LONG).show();
+                    helper.addCredentialsToDb(cred);
+                    startActivity(new Intent(RegistrationActivity.this,LoginActivity.class));
+                }
+
+
             }
 
-            startActivity(new Intent(RegistrationActivity.this,LoginActivity.class));
+
         }
     }
 }
