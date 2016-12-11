@@ -3,12 +3,15 @@ package onetown.otop.onetownoneproduct.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import onetown.otop.onetownoneproduct.Activity.LoginActivity;
 import onetown.otop.onetownoneproduct.Objects.Credentials;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 
@@ -18,9 +21,10 @@ public class DBHelper extends SQLiteOpenHelper {
     private static String DB_NAME="LocationData";
     private static String TBL_ID="id";
 
-    private String OTOP_TABLE="location";
+    private String OTOP_TABLE="tbl_town";
     private String COMMENTS_TABLE="tbl_comments";
     private String USERS_TABLE="tbl_user";
+    private String LIKE_TABLE="tbl_like";
 
     public DBHelper(Context context) {
         super(context,DB_NAME,null,DB_VERSION);
@@ -38,13 +42,24 @@ public class DBHelper extends SQLiteOpenHelper {
             " user_email TEXT NOT NULL, " +
             "user_password TEXT NOT NULL )";
 
+    String createLikesTableQuery= "CREATE TABLE "+LIKE_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, liked INTEGER DEFAULT 0, " +
+            "likedby_username INTEGER, places_liked INTEGER, FOREIGN KEY(likedby_username) REFERENCES "+USERS_TABLE+"(id), "+
+            "FOREIGN KEY(places_liked) REFERENCES "+OTOP_TABLE+"(id))";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createLocationTableQuery);
         db.execSQL(createCommentsTableQuery);
         db.execSQL(createUserTableQuery);
+        db.execSQL(createLikesTableQuery);
 
         Log.i("onCreate",String.valueOf(db.getPageSize()));
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     @Override
@@ -66,7 +81,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
         //db.insert("location",null,values);
-        db.insertWithOnConflict("location",null,values,SQLiteDatabase.CONFLICT_IGNORE);
+        db.insertWithOnConflict(OTOP_TABLE,null,values,SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
 
         return data;
@@ -77,7 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db= getWritableDatabase();
         ArrayList<LocationsData> locations= new ArrayList<LocationsData>();
 
-        String query= "SELECT * FROM location;";
+        String query= "SELECT * FROM "+OTOP_TABLE+";";
         Log.i("Query ",query);
         Cursor c = db.rawQuery(query,null);
 
@@ -105,6 +120,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
     // Location Functions------ END
+
+
+
+
 
     // Users Functions------- Start
     public Credentials addCredentialsToDb(Credentials credentials) {
@@ -135,13 +154,34 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.e("User Email Check: ","user existed");
         }
 
+        db.close();
         return userExists;
+    }
+
+    public boolean checkIfAccountExist(String email,String password) {
+        boolean accountExist= true;
+
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor c= db.rawQuery("SELECT user_email, user_password FROM "+USERS_TABLE+" where user_email = ? AND user_password = ?",
+                new String[]{email,password});
+
+        if (c.getCount() < 1) {
+            accountExist=false;
+            Log.e("Account checking","No Accounts found");
+        }else {
+            c.moveToFirst();
+            if (c.getString(c.getColumnIndex("user_email")).toString().equals(email) && c.getString(c.getColumnIndex("user_password")).toString().equals(password))  {
+                Log.i("Account checking","Account Exist!");
+            }
+        }
+
+        return accountExist;
     }
 
 
     public boolean checkDatabaseIfEmpty() {
         SQLiteDatabase db= getReadableDatabase();
-        String query="SELECT * FROM location";
+        String query="SELECT * FROM "+OTOP_TABLE;
         Cursor c= db.rawQuery(query,null);
 
         if (c.getCount() > 0) {
