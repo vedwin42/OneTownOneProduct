@@ -9,19 +9,21 @@ import java.util.Locale;
  * Created by EasyBreezy on 12/5/2016.
  */
 
-public class Comments {
+public class Comments  extends Credentials{
     public int _id;
     public String currentEmail;
     public String currentTimeStamp;
     public String commentContent;
+    public String currentUser;
 
     public Comments() {
 
     }
-    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent) {
+    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent,String currentUser) {
         this.currentEmail=_currentEmail;
         this.currentTimeStamp=_currentTimeStamp;
         this.commentContent=_commentContent;
+        this.currentUser=currentUser;
     }
 
     public int get_id() {
@@ -53,5 +55,14 @@ public class Comments {
 
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
+    }
+
+    public String getCurrentUser() {
+        currentUser= getEmail();
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 }

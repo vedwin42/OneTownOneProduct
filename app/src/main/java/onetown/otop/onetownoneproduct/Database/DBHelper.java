@@ -35,8 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "locationLat DECIMAL, locationLong DECIMAL, drawable_image TEXT)";
 
     String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-            " comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            " user_fullname TEXT, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id) )";
+            "otop_id INTEGER NOT NULL, comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
+            " user_fullname TEXT, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id), FOREIGN KEY(otop_id) REFERENCES tbl_town(id) )";
 
     String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             " user_email TEXT NOT NULL, " +
@@ -190,5 +190,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return true;
     }
+
+    /** Comments Functions */
+
+
 
 }

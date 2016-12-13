@@ -52,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             Credentials cred= new Credentials(password,email);
 
-            if (password != confirmPass && password.isEmpty() && confirmPass.isEmpty()) {
+            if ((password != confirmPass && password.isEmpty() && confirmPass.isEmpty()) || (!password.trim().equals(confirmPass))) {
                 Toast.makeText(getApplicationContext(),"Please check your password/email !",Toast.LENGTH_LONG).show();
             }else {
 
