@@ -9,9 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import onetown.otop.onetownoneproduct.Activity.LoginActivity;
+import onetown.otop.onetownoneproduct.Objects.Comments;
 import onetown.otop.onetownoneproduct.Objects.Credentials;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 
@@ -36,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "otop_id INTEGER NOT NULL, comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            " user_fullname TEXT, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id), FOREIGN KEY(otop_id) REFERENCES tbl_town(id) )";
+            " user_fullname INTEGER, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id), FOREIGN KEY(otop_id) REFERENCES tbl_town(id) )";
 
     String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             " user_email TEXT NOT NULL, " +
@@ -193,6 +197,51 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /** Comments Functions */
 
+    //Getting all comments in every specific places
+    // int id--> id of the place, to filter only related comments
 
+    public ArrayList<Comments> getAllComments(int id) {
+        ArrayList<Comments> commentsArrayList= new ArrayList<>();
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor c= db.rawQuery("SELECT "+COMMENTS_TABLE+".comment_content, "+COMMENTS_TABLE+".created_at, "+OTOP_TABLE+".locationName, "+USERS_TABLE+".user_email"+
+                    "FROM "+COMMENTS_TABLE+
+                    "INNER JOIN "+USERS_TABLE+" ON "+USERS_TABLE+".id = "+COMMENTS_TABLE+".user_fullname "+
+                    "INNER JOIN "+OTOP_TABLE+" ON "+OTOP_TABLE+".id = "+COMMENTS_TABLE+".otop_id WHERE "+COMMENTS_TABLE+".otop_id = ?",new String[]{String.valueOf(id)});
+
+        if (c.moveToFirst()) {
+            do {
+               Comments commentsObj= new Comments();
+                commentsObj.setCurrentEmail(c.getString(c.getColumnIndex("user_email")));
+                commentsObj.setCommentContent(c.getString(c.getColumnIndex("comment_content")));
+                commentsObj.setCurrentTimeStamp(c.getString(c.getColumnIndex("created_at")));
+
+                commentsArrayList.add(commentsObj);
+            }while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return commentsArrayList;
+    }
+
+    public String getCurrentTimeStamp() {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date= new Date();
+        return sdf.format(date);
+    }
+
+    public Comments addComment(Comments comments) {
+            SQLiteDatabase db= getWritableDatabase();
+            ContentValues contentValues= new ContentValues();
+        contentValues.put("otop_id",comments.getOtop_id());
+        contentValues.put("comment_content",comments.getCommentContent());
+        contentValues.put("created_at",getCurrentTimeStamp());
+        contentValues.put("user_fullname",comments.getCurrentUser());
+
+        db.insert(COMMENTS_TABLE,null,contentValues);
+        db.close();
+
+        return comments;
+
+    }
 
 }

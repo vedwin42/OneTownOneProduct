@@ -9,21 +9,23 @@ import java.util.Locale;
  * Created by EasyBreezy on 12/5/2016.
  */
 
-public class Comments  extends Credentials{
+public class Comments{
     public int _id;
     public String currentEmail;
     public String currentTimeStamp;
     public String commentContent;
     public String currentUser;
+    public int otop_id;
 
     public Comments() {
 
     }
-    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent,String currentUser) {
+    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent,String currentUser,int otop_id) {
         this.currentEmail=_currentEmail;
         this.currentTimeStamp=_currentTimeStamp;
         this.commentContent=_commentContent;
         this.currentUser=currentUser;
+        this.otop_id=otop_id;
     }
 
     public int get_id() {
@@ -38,14 +40,16 @@ public class Comments  extends Credentials{
         return currentEmail;
     }
 
-    public void setCurrentEmail(Credentials currentEmail) {
-        this.currentEmail = currentEmail.getEmail();
+    public void setCurrentEmail(String currentEmail) {
+        this.currentEmail = currentEmail;
     }
 
     public String getCurrentTimeStamp() {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        Date date= new Date();
-        return sdf.format(date);
+       return currentTimeStamp;
+    }
+
+    public void setCurrentTimeStamp(String timeStamp) {
+        currentTimeStamp= timeStamp;
     }
 
 
@@ -58,11 +62,18 @@ public class Comments  extends Credentials{
     }
 
     public String getCurrentUser() {
-        currentUser= getEmail();
         return currentUser;
     }
 
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public int getOtop_id() {
+        return otop_id;
+    }
+
+    public void setOtop_id(int otop_id) {
+        this.otop_id = otop_id;
     }
 }

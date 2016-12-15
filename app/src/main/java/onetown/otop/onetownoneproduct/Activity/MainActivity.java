@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Location loc;
     LocationRequest locationRequest;
     GoogleApiClient client;
+    Circle currentLocCircle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("Place Position ",String.valueOf("Latitude: "+places.get(position).locationLatitude+" Longitude: "+places.get(position).locationLongitude));
 
 
+
          /**      // On marker click listener
                 gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
@@ -111,19 +114,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 requestLocationUpdate();
 
-               // loc= tracker.getUsersLocationByCriteria(gMap,radiusValue);
                 latLng= new LatLng(loc.getLatitude(),loc.getLongitude());
                 Log.d("MainActivity",String.valueOf(loc.getLatitude()+" "+String.valueOf(loc.getLongitude())));
 
               //  gMap.clear();
                 // Zoom Camera to the current location
-                gMap.addCircle(new CircleOptions()
+            /**    currentLocCircle= gMap.addCircle(new CircleOptions()
                                 .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
                                 .radius(1000)
                                 .strokeColor(Color.GREEN)
                                 .fillColor(Color.LTGRAY));
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
-
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5)); */
 
             }
         });
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     // Marker Creation for OTOP Places
     public boolean createMarker(ArrayList<LocationsData>datas) {
-        placesMap= gMap;
+        //placesMap= gMap;
         boolean isNotEmpty= true;
         if (isNotEmpty) {
            placesMarker= placesMap.addMarker(new MarkerOptions()
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                    startActivity(i);
                    Log.i("Intent",i.toString());
                    Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
+                   Log.i("Getting Item Id",String.valueOf(places.get(0).get_id()));
                    return false;
                }
            });
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return isNotEmpty;
     }
+
     // Check if Google Play Services is Available
     public boolean isGooglePlayAvailable() {
         GoogleApiAvailability api= GoogleApiAvailability.getInstance();
@@ -209,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap= googleMap;
+        placesMap=gMap;
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(10.8417947,123.057734),5));
         gMap.getUiSettings().setZoomControlsEnabled(true);
     }
@@ -250,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(client,locationRequest,this);
     }
+
     // Getting last known Location
     private void getLastKnownLocation() {
 
@@ -261,7 +266,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             myCurrentLocationMarker= gMap.addMarker(new MarkerOptions()
                     .position(new LatLng(loc.getLatitude(),loc.getLongitude()))
                     .title("My Current Location"));
-        }else {
+
+            currentLocCircle= gMap.addCircle(new CircleOptions()
+                    .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
+                    .radius(1000)
+                    .strokeColor(Color.GREEN)
+                    .fillColor(Color.LTGRAY));
+           // gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(),loc.getLongitude()),15));
+
+        }
+        else {
+
             AlertDialog.Builder builder= new AlertDialog.Builder(this);
             builder.setTitle("Location Service not Active");
             builder.setMessage("Please enable location service (GPS)");
@@ -305,9 +320,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+        myCurrentLocationMarker.remove();
+        currentLocCircle.remove();
         loc= location;
-        gMap.clear();
-
         getLastKnownLocation();
     }
 }
