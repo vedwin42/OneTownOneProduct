@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static int DB_VERSION=1;
     private static String DB_NAME="LocationData";
-    private static String TBL_ID="id";
+    private static String TBL_ID="_id";
 
     private String OTOP_TABLE="tbl_town";
     private String COMMENTS_TABLE="tbl_comments";
@@ -38,15 +38,15 @@ public class DBHelper extends SQLiteOpenHelper {
             "locationName TEXT, locationProducts TEXT," +
             "locationLat DECIMAL, locationLong DECIMAL, drawable_image TEXT)";
 
-    String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+    String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "otop_id INTEGER NOT NULL, comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
             " user_fullname INTEGER, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id), FOREIGN KEY(otop_id) REFERENCES tbl_town(id) )";
 
-    String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+    String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             " user_email TEXT NOT NULL, " +
             "user_password TEXT NOT NULL )";
 
-    String createLikesTableQuery= "CREATE TABLE "+LIKE_TABLE+"( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, liked INTEGER DEFAULT 0, " +
+    String createLikesTableQuery= "CREATE TABLE "+LIKE_TABLE+"( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, liked INTEGER DEFAULT 0, " +
             "likedby_username INTEGER, places_liked INTEGER, FOREIGN KEY(likedby_username) REFERENCES "+USERS_TABLE+"(id), "+
             "FOREIGN KEY(places_liked) REFERENCES "+OTOP_TABLE+"(id))";
 
@@ -130,6 +130,26 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     // Users Functions------- Start
+
+    public ArrayList<Credentials> getSingleUserDetails(Credentials credentials) {
+        ArrayList<Credentials> singlePersonDetails=new ArrayList<Credentials>();
+
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor c=db.query(USERS_TABLE,null,"user_email like ? and user_password like ? ", new String[]{credentials.getEmail(),credentials.getPassword()},null,null,null);
+        c.moveToFirst();
+        if (c.getCount() < 1) {
+
+        }else {
+            credentials= new Credentials(c.getInt(c.getColumnIndex("_id")),c.getString(c.getColumnIndex("user_email")),c.getString(c.getColumnIndex("user_password")));
+            singlePersonDetails.add(credentials);
+        }
+
+        Log.i("USER ID: ",String.valueOf(singlePersonDetails.get(0).get_id()));
+
+        return singlePersonDetails;
+    }
+
+    // Getting Each USER DETAILS
     public Credentials addCredentialsToDb(Credentials credentials) {
         SQLiteDatabase db= getWritableDatabase();
         ContentValues cv= new ContentValues();
@@ -205,8 +225,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db= getReadableDatabase();
         Cursor c= db.rawQuery("SELECT "+COMMENTS_TABLE+".comment_content, "+COMMENTS_TABLE+".created_at, "+OTOP_TABLE+".locationName, "+USERS_TABLE+".user_email"+
                     "FROM "+COMMENTS_TABLE+
-                    "INNER JOIN "+USERS_TABLE+" ON "+USERS_TABLE+".id = "+COMMENTS_TABLE+".user_fullname "+
-                    "INNER JOIN "+OTOP_TABLE+" ON "+OTOP_TABLE+".id = "+COMMENTS_TABLE+".otop_id WHERE "+COMMENTS_TABLE+".otop_id = ?",new String[]{String.valueOf(id)});
+                    "INNER JOIN "+USERS_TABLE+" ON "+USERS_TABLE+"._id = "+COMMENTS_TABLE+".user_fullname "+
+                    "INNER JOIN "+OTOP_TABLE+" ON "+OTOP_TABLE+"._id = "+COMMENTS_TABLE+".otop_id WHERE "+COMMENTS_TABLE+".otop_id = ?",new String[]{String.valueOf(id)});
 
         if (c.moveToFirst()) {
             do {

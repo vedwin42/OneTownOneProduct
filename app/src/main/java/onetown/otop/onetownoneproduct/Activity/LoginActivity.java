@@ -3,7 +3,6 @@ package onetown.otop.onetownoneproduct.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import onetown.otop.onetownoneproduct.Database.DBHelper;
+import onetown.otop.onetownoneproduct.Objects.Credentials;
 import onetown.otop.onetownoneproduct.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,9 +43,16 @@ public class LoginActivity extends AppCompatActivity {
                 passwordValue=passwordEditext.getText().toString();
 
                 if (helper.checkIfAccountExist(emailValue,passwordValue)) {
+
+                    helper.getSingleUserDetails(new Credentials(emailValue,passwordValue));
+
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    emailEditext.setText("");
+                    passwordEditext.setText("");
                 }else {
                     Toast.makeText(getApplicationContext(),"Invalid Login!",Toast.LENGTH_LONG).show();
+                    emailEditext.setText("");
+                    passwordEditext.setText("");
                 }
             }
         });

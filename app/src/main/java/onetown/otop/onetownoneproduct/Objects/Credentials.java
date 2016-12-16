@@ -13,9 +13,15 @@ public class Credentials {
 
     }
 
-    public Credentials(String password,String email) {
+    public Credentials(String email,String password) {
         this.password=password;
         this.email= email;
+    }
+
+    public Credentials(int id,String email,String password) {
+        this._id=id;
+        this.email=email;
+        this.password=password;
     }
 
     public int get_id() {

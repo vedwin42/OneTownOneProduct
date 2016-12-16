@@ -16,6 +16,7 @@ import com.google.android.gms.location.places.Place;
 import java.util.ArrayList;
 
 import onetown.otop.onetownoneproduct.Database.DBHelper;
+import onetown.otop.onetownoneproduct.Objects.Comments;
 import onetown.otop.onetownoneproduct.Objects.LocationsData;
 import onetown.otop.onetownoneproduct.R;
 
@@ -46,7 +47,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void AddNewComment() {
-
-    }
+   /**public void AddNewComment() {
+        Comments commentsObj;
+        String stringCommentValue= commentEditext.getText().toString();
+        helper.addComment()
+    } */
 }

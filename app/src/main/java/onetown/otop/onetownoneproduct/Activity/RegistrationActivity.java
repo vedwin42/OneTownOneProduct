@@ -50,10 +50,13 @@ public class RegistrationActivity extends AppCompatActivity {
             password= passwordEditext.getText().toString();
             confirmPass= confirmPassword.getText().toString();
 
-            Credentials cred= new Credentials(password,email);
+            Credentials cred= new Credentials(email,password);
 
             if ((password != confirmPass && password.isEmpty() && confirmPass.isEmpty()) || (!password.trim().equals(confirmPass))) {
                 Toast.makeText(getApplicationContext(),"Please check your password/email !",Toast.LENGTH_LONG).show();
+                emailEditext.setText("");
+                passwordEditext.setText("");
+                confirmPassword.setText("");
             }else {
 
                 if (helper.checkIfEmailExist(email)) {
@@ -62,6 +65,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Credentials Successfully added",Toast.LENGTH_LONG).show();
                     helper.addCredentialsToDb(cred);
                     startActivity(new Intent(RegistrationActivity.this,LoginActivity.class));
+                    emailEditext.setText("");
+                    passwordEditext.setText("");
+                    confirmPassword.setText("");
                 }
 
 

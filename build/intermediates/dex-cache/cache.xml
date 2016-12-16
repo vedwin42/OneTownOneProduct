@@ -39,21 +39,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\10.0.0\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.3"
-        sha1="985be85104f6d0c5c5e51e7b7e60d8883a98ac64">
-        <dex dex="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-10.0.0_c6a876300bcb78f9c7ad1c788905a46d50e4902c.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-places\10.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.3"
         sha1="813f70b551ce5206ad15dfe6e2f5b2d86e08a723">
         <dex dex="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-places-10.0.0_ea4f425b7440174161868fa3593fdd82a7142383.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\10.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.3"
+        sha1="985be85104f6d0c5c5e51e7b7e60d8883a98ac64">
+        <dex dex="C:\Users\EasyBreezy\Documents\AndroidStudioProjects\OneTownOneProduct\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-10.0.0_c6a876300bcb78f9c7ad1c788905a46d50e4902c.jar" />
     </item>
     <item
         is-multidex="false"

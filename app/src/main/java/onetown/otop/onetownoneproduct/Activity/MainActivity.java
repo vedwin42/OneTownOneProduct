@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     // Marker Creation for OTOP Places
     public boolean createMarker(ArrayList<LocationsData>datas) {
-        //placesMap= gMap;
+
         boolean isNotEmpty= true;
         if (isNotEmpty) {
            placesMarker= placesMap.addMarker(new MarkerOptions()
@@ -191,13 +191,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onStop() {
         super.onStop();
-        client.disconnect();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopGettingLocationData();
+        client.disconnect();
     }
 
     //Initialize Map
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .radius(1000)
                     .strokeColor(Color.GREEN)
                     .fillColor(Color.LTGRAY));
-           // gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(),loc.getLongitude()),15));
+
 
         }
         else {
