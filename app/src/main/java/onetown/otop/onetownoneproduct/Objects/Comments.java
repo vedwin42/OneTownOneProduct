@@ -1,5 +1,9 @@
 package onetown.otop.onetownoneproduct.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,23 +13,22 @@ import java.util.Locale;
  * Created by EasyBreezy on 12/5/2016.
  */
 
-public class Comments{
+public class Comments implements Parcelable {
     public int _id;
-    public String currentEmail;
     public String currentTimeStamp;
     public String commentContent;
-    public String currentUser;
-    public int otop_id;
+    public LocationsData locationsData;
+    public Credentials credentials;
 
     public Comments() {
-
+        super();
     }
-    public Comments(String _currentEmail,String _currentTimeStamp, String _commentContent,String currentUser,int otop_id) {
-        this.currentEmail=_currentEmail;
-        this.currentTimeStamp=_currentTimeStamp;
-        this.commentContent=_commentContent;
-        this.currentUser=currentUser;
-        this.otop_id=otop_id;
+
+    public Comments( String currentTimeStamp, String commentContent, LocationsData locationsData, Credentials credentials) {
+        this.currentTimeStamp = currentTimeStamp;
+        this.commentContent = commentContent;
+        this.locationsData = locationsData;
+        this.credentials = credentials;
     }
 
     public int get_id() {
@@ -36,22 +39,13 @@ public class Comments{
         this._id = _id;
     }
 
-    public String getCurrentEmail() {
-        return currentEmail;
-    }
-
-    public void setCurrentEmail(String currentEmail) {
-        this.currentEmail = currentEmail;
-    }
-
     public String getCurrentTimeStamp() {
-       return currentTimeStamp;
+        return currentTimeStamp;
     }
 
-    public void setCurrentTimeStamp(String timeStamp) {
-        currentTimeStamp= timeStamp;
+    public void setCurrentTimeStamp(String currentTimeStamp) {
+        this.currentTimeStamp = currentTimeStamp;
     }
-
 
     public String getCommentContent() {
         return commentContent;
@@ -61,19 +55,57 @@ public class Comments{
         this.commentContent = commentContent;
     }
 
-    public String getCurrentUser() {
-        return currentUser;
+    public LocationsData getLocationsData() {
+        return locationsData;
     }
 
-    public void setCurrentUser(String currentUser) {
-        this.currentUser = currentUser;
+    public void setLocationsData(LocationsData locationsData) {
+        this.locationsData = locationsData;
     }
 
-    public int getOtop_id() {
-        return otop_id;
+    public Credentials getCredentials() {
+        return credentials;
     }
 
-    public void setOtop_id(int otop_id) {
-        this.otop_id = otop_id;
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
     }
+
+    public static Creator<Comments> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this._id);
+        dest.writeString(this.currentTimeStamp);
+        dest.writeString(this.commentContent);
+        dest.writeParcelable(this.locationsData, flags);
+        dest.writeParcelable(this.credentials, flags);
+    }
+
+    protected Comments(Parcel in) {
+        this._id = in.readInt();
+        this.currentTimeStamp = in.readString();
+        this.commentContent = in.readString();
+        this.locationsData = in.readParcelable(LocationsData.class.getClassLoader());
+        this.credentials = in.readParcelable(Credentials.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Comments> CREATOR = new Parcelable.Creator<Comments>() {
+        @Override
+        public Comments createFromParcel(Parcel source) {
+            return new Comments(source);
+        }
+
+        @Override
+        public Comments[] newArray(int size) {
+            return new Comments[size];
+        }
+    };
 }

@@ -90,19 +90,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("Place Position ",String.valueOf("Latitude: "+places.get(position).locationLatitude+" Longitude: "+places.get(position).locationLongitude));
 
 
-
-         /**      // On marker click listener
-                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
-                        i.putExtra("lists",places);
-                        startActivity(i);
-                        Log.i("Intent",i.toString());
-                        Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
-                        return false;
-                    }
-                }); */
             }
         });
 
@@ -117,14 +104,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 latLng= new LatLng(loc.getLatitude(),loc.getLongitude());
                 Log.d("MainActivity",String.valueOf(loc.getLatitude()+" "+String.valueOf(loc.getLongitude())));
 
-              //  gMap.clear();
-                // Zoom Camera to the current location
-            /**    currentLocCircle= gMap.addCircle(new CircleOptions()
-                                .center(new LatLng(loc.getLatitude(),loc.getLongitude()))
-                                .radius(1000)
-                                .strokeColor(Color.GREEN)
-                                .fillColor(Color.LTGRAY));
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5)); */
 
             }
         });
@@ -157,9 +136,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                public boolean onMarkerClick(Marker marker) {
                    Log.i("Places Marker",marker.getTitle()+"\n"+places.toString());
 
+                   LocationsData data= new LocationsData();
+                   data.set_id(places.get(0).get_id());
+                   data.setImage_path(places.get(0).getImage_path());
+                   data.setLocationName(places.get(0).getLocationName());
+                   data.setLocationLatitude(places.get(0).getLocationLatitude());
+                   data.setLocationLongitude(places.get(0).getLocationLongitude());
+                   data.setLocationProducts(places.get(0).getLocationProducts());
+
                    Intent i= new Intent(MainActivity.this,PlaceDetailsActivity.class);
-                   i.putExtra("lists",places);
+                   i.putExtra("places",data);
                    startActivity(i);
+
                    Log.i("Intent",i.toString());
                    Log.i("onMarkerClick","Successfull, Title: "+marker.getTitle());
                    Log.i("Getting Item Id",String.valueOf(places.get(0).get_id()));

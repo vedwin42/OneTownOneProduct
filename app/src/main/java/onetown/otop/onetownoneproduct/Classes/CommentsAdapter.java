@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import onetown.otop.onetownoneproduct.Objects.Comments;
+import onetown.otop.onetownoneproduct.Objects.Credentials;
 import onetown.otop.onetownoneproduct.R;
 
 /**
@@ -52,7 +53,7 @@ public class CommentsAdapter extends ArrayAdapter<Comments>{
             holder=(CommentsViewholder)convertView.getTag();
         }
 
-        holder.email.setText(comments.getCurrentEmail());
+        holder.email.setText(comments.getCredentials().getEmail());
         holder.commentContent.setText(comments.getCommentContent());
         holder.timeStamp.setText(comments.getCurrentTimeStamp());
         return convertView;

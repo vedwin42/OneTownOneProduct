@@ -1,12 +1,15 @@
 package onetown.otop.onetownoneproduct.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by root on 11/17/16.
  */
 
-public class LocationsData implements Serializable{
+public class LocationsData implements Parcelable {
 
     public int _id;
     public String locationName;
@@ -80,4 +83,49 @@ public class LocationsData implements Serializable{
                 +"Location Latitude: "+locationLatitude+"\n"
                 +"Location Longitude: "+locationLongitude;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this._id);
+        dest.writeString(this.locationName);
+        dest.writeString(this.locationProducts);
+        dest.writeDouble(this.locationLatitude);
+        dest.writeDouble(this.locationLongitude);
+        dest.writeString(this.image_path);
+    }
+
+    private void readFromParcel(Parcel in) {
+        _id=in.readInt();
+        locationName= in.readString();
+        locationProducts= in.readString();
+        locationLatitude= in.readDouble();
+        locationLongitude= in.readDouble();
+        image_path= in.readString();
+    }
+
+  protected LocationsData(Parcel in) {
+        this._id = in.readInt();
+        this.locationName = in.readString();
+        this.locationProducts = in.readString();
+        this.locationLatitude = in.readDouble();
+        this.locationLongitude = in.readDouble();
+        this.image_path = in.readString();
+    }
+
+    public static final Parcelable.Creator<LocationsData> CREATOR = new Parcelable.Creator<LocationsData>() {
+        @Override
+        public LocationsData createFromParcel(Parcel source) {
+            return new LocationsData(source);
+        }
+
+        @Override
+        public LocationsData[] newArray(int size) {
+            return new LocationsData[size];
+        }
+    };
 }

@@ -40,13 +40,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     String createCommentsTableQuery= "CREATE TABLE "+ COMMENTS_TABLE+ "( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "otop_id INTEGER NOT NULL, comment_content TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP," +
-            " user_fullname INTEGER, FOREIGN KEY(user_fullname) REFERENCES tbl_user(id), FOREIGN KEY(otop_id) REFERENCES tbl_town(id) )";
+            " user_fullname INTEGER, FOREIGN KEY(user_fullname) REFERENCES tbl_user(_id), FOREIGN KEY(otop_id) REFERENCES tbl_town(_id) )";
 
     String createUserTableQuery= "CREATE TABLE "+ USERS_TABLE+"( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             " user_email TEXT NOT NULL, " +
-            "user_password TEXT NOT NULL )";
+            "user_password TEXT NOT NULL);";
 
-    String createLikesTableQuery= "CREATE TABLE "+LIKE_TABLE+"( _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, liked INTEGER DEFAULT 0, " +
+    String createLikesTableQuery= "CREATE TABLE "+LIKE_TABLE+"(_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, liked INTEGER DEFAULT 0, " +
             "likedby_username INTEGER, places_liked INTEGER, FOREIGN KEY(likedby_username) REFERENCES "+USERS_TABLE+"(id), "+
             "FOREIGN KEY(places_liked) REFERENCES "+OTOP_TABLE+"(id))";
 
@@ -129,8 +129,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-    // Users Functions------- Start
-
+/**    // Users Functions------- Start
     public ArrayList<Credentials> getSingleUserDetails(Credentials credentials) {
         ArrayList<Credentials> singlePersonDetails=new ArrayList<Credentials>();
 
@@ -147,6 +146,24 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.i("USER ID: ",String.valueOf(singlePersonDetails.get(0).get_id()));
 
         return singlePersonDetails;
+    } */
+
+    public Credentials getSingleValue(Credentials cred) {
+        SQLiteDatabase db= getReadableDatabase();
+        Cursor c= db.query(USERS_TABLE,null,"user_email like ? and user_password like ? ",new String[]{cred.getEmail(),cred.getPassword()},null,null,null);
+        c.moveToFirst();
+        if (c.getCount() < 1) {
+
+        }else {
+            cred= new Credentials();
+            cred.set_id(c.getInt(c.getColumnIndex("_id")));
+            cred.setEmail(c.getString(c.getColumnIndex("user_email")));
+            cred.setPassword(c.getString(c.getColumnIndex("user_password")));
+
+            Log.i("Credentials",String.valueOf(cred));
+        }
+
+        return cred;
     }
 
     // Getting Each USER DETAILS
@@ -166,6 +183,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return credentials;
 
     }
+
+
 
     public Boolean checkIfEmailExist(String email) {
         boolean userExists=true;
@@ -231,7 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                Comments commentsObj= new Comments();
-                commentsObj.setCurrentEmail(c.getString(c.getColumnIndex("user_email")));
+              // commentsObj.setCurrentEmail(c.getString(c.getColumnIndex("user_email")));
                 commentsObj.setCommentContent(c.getString(c.getColumnIndex("comment_content")));
                 commentsObj.setCurrentTimeStamp(c.getString(c.getColumnIndex("created_at")));
 
@@ -249,19 +268,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return sdf.format(date);
     }
 
-    public Comments addComment(Comments comments) {
-            SQLiteDatabase db= getWritableDatabase();
-            ContentValues contentValues= new ContentValues();
-        contentValues.put("otop_id",comments.getOtop_id());
+    public void addComment(Comments comments) {
+
+        SQLiteDatabase db= getWritableDatabase();
+
+        ContentValues contentValues= new ContentValues();
+
+        contentValues.put("otop_id",comments.getLocationsData().get_id());
         contentValues.put("comment_content",comments.getCommentContent());
         contentValues.put("created_at",getCurrentTimeStamp());
-        contentValues.put("user_fullname",comments.getCurrentUser());
+        contentValues.put("user_fullname",comments.getCredentials().get_id());
 
         db.insert(COMMENTS_TABLE,null,contentValues);
         db.close();
 
-        return comments;
-
+        Log.d("Comments Values",String.valueOf(comments));
     }
 
 }
